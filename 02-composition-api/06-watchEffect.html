@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+    count: {{ count }} <br />
+    <button @click="handleClick">加1</button>
+    <button @click="stopClick">stopClick</button>
+  </div>
+
+  <script type="module">
+    import { createApp, ref, watchEffect } from './node_modules/vue/dist/vue.esm-browser.js'
+
+    const useCount = () => {
+      const count = ref(11)
+      const stop = watchEffect(() => {
+        console.log(count.value)
+      })
+      return {
+        count,
+        handleClick: () => {
+          count.value += 1
+        },
+        stopClick: () => {
+          stop()
+        }
+      }
+    }
+    const app = createApp({
+      setup() {
+        return {
+          ...useCount()
+        }
+      }
+    })
+
+    app.mount('#app')
+
+  </script>
+</body>
+
+</html>

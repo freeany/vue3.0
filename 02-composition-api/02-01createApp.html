@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+    x: {{ position.x }} <br>
+    y: {{ position.y }}
+  </div>
+
+  <script type="module">
+    import { createApp, reactive, onMounted, onUnmounted } from './node_modules/vue/dist/vue.esm-browser.js'
+
+
+    const handleMouseMove = () => {
+      const position = reactive({
+        x: 0,
+        y: 0
+      })
+
+      const updatePage = e => {
+        position.x = e.pageX
+        position.y = e.pageY
+      }
+      onMounted(() => {
+        window.addEventListener('mousemove', updatePage)
+      })
+
+      onUnmounted(() => {
+        // console.log('onUnMounted');
+        window.removeEventListener('mousemove', updatePage)
+      })
+
+      return position
+    }
+
+    // createApp是创建对象用的
+    const app = createApp({
+      // composition api的入口
+      setup() {
+        // 第一个参数是props， 是用来接收外部传递的参数，并且props对象是一个响应式的对象，不能被解构？
+        // 第二个参数 context 是一个对象 context具有三个成员attrs, emit, slots。
+        // setup需要返回一个对象， 返回的对象可以使用在模板，methods、computed以及生命周期钩子函数中
+        // setup执行的时机：在props被解析完毕，在组件实例被创建之前执行的，所以在setup内部无法通过this获取到组件的实例，因为组件实例未被创建，所以在setup中无法访问到组件中的data、computed、methods，setup内部的this指向undefined。
+        // 为了让某一逻辑代码都能被封装到一个函数中， vue3提供了reactive函数让一个对象变成响应式的， 并且该对象的嵌套属性也都会被转换成响应式的，该函数返回一个proxy对象，
+        const position = handleMouseMove()
+        return {
+          position
+        }
+      },
+      mounted() {
+        this.position.x = 100
+      }
+    })
+    console.log(app) // 打印下这个vue对象与2.0的区别发现，属性显然更少了，
+    // app.mount 是以前的mounted方法， app.unmount是以前的destroryed
+    // 挂载到dom上
+    app.mount('#app')
+  </script>
+</body>
+
+</html>

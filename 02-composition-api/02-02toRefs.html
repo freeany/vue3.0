@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+    x: {{ x }} <br>
+    y: {{ y }}
+  </div>
+
+  <script type="module">
+    import { createApp, reactive, onMounted, onUnmounted, toRefs, ref } from './node_modules/vue/dist/vue.esm-browser.js'
+
+
+    const handleMouseMove = () => {
+      const position = reactive({
+        x: 0,
+        y: 0
+      })
+      const updatePage = e => {
+        position.x = e.pageX
+        position.y = e.pageY
+      }
+      onMounted(() => {
+        window.addEventListener('mousemove', updatePage)
+      })
+
+      onUnmounted(() => {
+        // console.log('onUnMounted');
+        window.removeEventListener('mousemove', updatePage)
+      })
+      // return toRefs(position)
+      return toRefs(position)
+    }
+    // createApp是创建对象用的
+    const app = createApp({
+      // composition api的入口
+      setup() {
+        let { x, y } = handleMouseMove()
+        // console.log(x,y);
+        return {
+          x, y
+        }
+      }
+    })
+    app.mount('#app')
+  </script>
+</body>
+
+</html>

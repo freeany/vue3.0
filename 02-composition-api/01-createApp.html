@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app"></div>
+
+  <script type="module">
+    import { createApp } from './node_modules/vue/dist/vue.esm-browser.js'
+
+    // createApp是创建对象用的
+    const app = createApp({
+      data() {
+        return {
+          position: {
+            x: 0,
+            y: 0
+          }
+        }
+      }
+    })
+    console.log(app) // 打印下这个vue对象与2.0的区别发现，属性显然更少了，
+    // app.mount 是以前的mounted方法， app.unmount是以前的destroryed
+    // 挂载到dom上
+    app.mount('#app')
+  </script>
+</body>
+
+</html>

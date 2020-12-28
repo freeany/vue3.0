@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+    <input type="text" v-model="question"> <br />
+    <div>{{answer}}</div>
+  </div>
+
+  <script type="module">
+    import { createApp, ref, watch } from './node_modules/vue/dist/vue.esm-browser.js'
+
+    createApp({
+      setup() {
+        const question = ref('')
+        const answer = ref('')
+        watch(question, async (newValue, oldValue) => {
+          const result = await fetch('https://www.yesno.wtf/api')
+          const data = await result.json()
+          answer.value = data.answer
+        })
+        return {
+          question,
+          answer
+        }
+      }
+    }).mount('#app')
+
+  </script>
+</body>
+
+</html>
